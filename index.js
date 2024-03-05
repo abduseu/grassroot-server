@@ -8,7 +8,7 @@ app.use(cors())
 app.use(express.json())
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.db_user}:${process.env.db_pass}@cluster0.rkpusfk.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -24,11 +24,27 @@ async function run() {
   try {
     // await client.connect();
     //Users code start from here:
-	const database = client.db('grassroot_db')
+    const database = client.db('grassroot_db')
     const items = database.collection('items')
+
+    /* ITEMS START */
+    //items >> Read
+    app.get('/items', async (req, res) => {
+      const result = await items.find().sort({_id: -1}).toArray()
+      res.send(result)
+    })
+
+    //items/_id >> Read one
+    app.get('/items/:id', async (req, res) => {
+      const id = req.params.id
+
+      const filter = { _id: new ObjectId(id) }
+      const result = await items.findOne(filter)
+      res.send(result)
+    })
+
     
-
-
+    /* ITEMS END */
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -41,10 +57,10 @@ async function run() {
 run().catch(console.dir);
 
 
-app.get('/', (req, res)=>{
-    res.send('Welcome to express-server')
+app.get('/', (req, res) => {
+  res.send('Welcome to express-server')
 })
 
-app.listen(port, ()=>{
-    console.log(`express-server is running on ${port}`)
+app.listen(port, () => {
+  console.log(`express-server is running on ${port}`)
 })
