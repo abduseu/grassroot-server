@@ -30,7 +30,7 @@ async function run() {
     /* ITEMS START */
     //items >> Read
     app.get('/items', async (req, res) => {
-      const result = await items.find().sort({_id: -1}).toArray()
+      const result = await items.find().sort({food_category: 1}).toArray()
       res.send(result)
     })
 
@@ -40,6 +40,14 @@ async function run() {
 
       const filter = { _id: new ObjectId(id) }
       const result = await items.findOne(filter)
+      res.send(result)
+    })
+
+    //items >> Create
+    app.post('/items', async (req, res) => {
+      const item = req.body
+
+      const result = await items.insertOne(item)
       res.send(result)
     })
 
