@@ -43,6 +43,25 @@ async function run() {
       res.send(result)
     })
 
+    //item/_id >> Update
+    app.put('/items/:id', async (req, res) => {
+      const id = req.params.id
+      const item = req.body
+
+      const filter = { _id: new ObjectId(id) }
+      const updateItem = {
+        $set: {
+          food_name: item.food_name, 
+          food_category: item.food_category, 
+          ingredients: item.ingredients, 
+          price: item.price, 
+          food_image: item.food_image
+        }
+      }
+      const result = await items.updateOne(filter, updateItem)
+      res.send(result)
+    })
+
     //items >> Create
     app.post('/items', async (req, res) => {
       const item = req.body
