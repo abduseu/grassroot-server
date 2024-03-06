@@ -70,6 +70,15 @@ async function run() {
       res.send(result)
     })
 
+    //items/_id >> Delete
+    app.delete('/items/:id', async (req, res) => {
+      const id = req.params.id
+
+      const filter = { _id: new ObjectId(id) }
+      const result = await items.deleteOne(filter)
+      res.send(result)
+    })
+
     
     /* ITEMS END */
 
