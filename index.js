@@ -26,6 +26,7 @@ async function run() {
     //Users code start from here:
     const database = client.db('grassroot_db')
     const items = database.collection('items')
+    const shopping_cart = database.collection('cart')
 
     /* ITEMS START */
     //items >> Read
@@ -81,6 +82,37 @@ async function run() {
 
     
     /* ITEMS END */
+    /* Cart START */
+    
+    //Cart >> Create
+    app.post('/cart', async (req, res) => {
+      const cart = req.body
+
+      const result = await shopping_cart.insertOne(cart)
+      res.send(result)
+    })
+
+    //Cart >> Read
+    app.get('/cart/:id', async (req, res) => {
+      const email = req.params.id
+
+      const filter = { userId: email }
+      const result = await shopping_cart.find(filter).toArray()
+      res.send(result)
+    })
+
+    //Cart/_id >> Delete
+    app.delete('/cart/:id', async (req, res) => {
+      const id = req.params.id
+
+      const filter = { _id: new ObjectId(id) }
+      const result = await shopping_cart.deleteOne(filter)
+      res.send(result)
+    })
+
+    /* Cart END */
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
