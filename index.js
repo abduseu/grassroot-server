@@ -27,6 +27,7 @@ async function run() {
     const database = client.db('grassroot_db')
     const items = database.collection('items')
     const shopping_cart = database.collection('cart')
+    const placed_orders = database.collection('placed_orders')
 
     /* ITEMS START */
     //items >> Read
@@ -110,7 +111,60 @@ async function run() {
       res.send(result)
     })
 
+
     /* Cart END */
+    /* ORDERS START */
+
+    //placed_orders >> Create
+    app.post('/orders', async (req, res) => {
+      const order = req.body
+
+      const result = await placed_orders.insertOne(order)
+      res.send(result)
+    })
+
+    //placed_orders >> Read
+    app.get('/orders', async (req, res) => {
+      const result = await placed_orders.find().sort({ _id: -1 }).toArray()
+      res.send(result)
+    })
+
+    //placed_orders/_id >> Read one
+    app.get('/orders/:id', async (req, res) => {
+      const id = req.params.id
+
+      const filter = { _id: new ObjectId(id) }
+      const result = await placed_orders.findOne(filter)
+      res.send(result)
+    })
+
+    //placed_orders/_id >> Update
+    app.put('/orders/:id', async (req, res) => {
+      const id = req.params.id
+      const order = req.body
+
+      const filter = { _id: new ObjectId(id) }
+      const updateOrder = {
+        $set: {
+          status: order.status, 
+        }
+      }
+      const result = await placed_orders.updateOne(filter, updateOrder)
+      res.send(result)
+    })
+
+    //placed_orders/_id >> Delete
+    app.delete('/orders/:id', async (req, res) => {
+      const id = req.params.id
+
+      const filter = { _id: new ObjectId(id) }
+      const result = await placed_orders.deleteOne(filter)
+      res.send(result)
+    })
+
+    
+
+    /* ORDERS END */
 
 
 
