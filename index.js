@@ -32,7 +32,7 @@ async function run() {
     /* ITEMS START */
     //items >> Read
     app.get('/items', async (req, res) => {
-      const result = await items.find().sort({food_category: 1}).toArray()
+      const result = await items.find().sort({ food_category: 1 }).toArray()
       res.send(result)
     })
 
@@ -53,10 +53,10 @@ async function run() {
       const filter = { _id: new ObjectId(id) }
       const updateItem = {
         $set: {
-          food_name: item.food_name, 
-          food_category: item.food_category, 
-          ingredients: item.ingredients, 
-          price: item.price, 
+          food_name: item.food_name,
+          food_category: item.food_category,
+          ingredients: item.ingredients,
+          price: item.price,
           food_image: item.food_image
         }
       }
@@ -81,10 +81,10 @@ async function run() {
       res.send(result)
     })
 
-    
+
     /* ITEMS END */
     /* Cart START */
-    
+
     //Cart >> Create
     app.post('/cart', async (req, res) => {
       const cart = req.body
@@ -93,7 +93,7 @@ async function run() {
       res.send(result)
     })
 
-    //Cart >> Read
+    //Cart/_id >> Read
     app.get('/cart/:id', async (req, res) => {
       const email = req.params.id
 
@@ -101,6 +101,14 @@ async function run() {
       const result = await shopping_cart.find(filter).toArray()
       res.send(result)
     })
+    
+    //Cart?_id >> Read query
+    app.get('/cart', async (req, res) => {
+      const email = req.query.email;
+      const filter = { email: email };
+      const result = await shopping_cart.find(filter).toArray();
+      res.send(result);
+    });
 
     //Cart/_id >> Delete
     app.delete('/cart/:id', async (req, res) => {
@@ -146,7 +154,7 @@ async function run() {
       const filter = { _id: new ObjectId(id) }
       const updateOrder = {
         $set: {
-          status: order.status, 
+          status: order.status,
         }
       }
       const result = await placed_orders.updateOne(filter, updateOrder)
@@ -162,7 +170,7 @@ async function run() {
       res.send(result)
     })
 
-    
+
 
     /* ORDERS END */
 
