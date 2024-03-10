@@ -105,7 +105,7 @@ async function run() {
     //Cart?_id >> Read query
     app.get('/cart', async (req, res) => {
       const email = req.query.email;
-      const filter = { email: email };
+      const filter = { userId: email };
       const result = await shopping_cart.find(filter).toArray();
       res.send(result);
     });
